@@ -1,0 +1,127 @@
+﻿@model Banking.Data.User
+@{
+    ViewBag.Title = "User data";
+    WebGrid gridAccounts = new WebGrid(Model.Account);
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>    
+    <div class="form-group">
+        @Html.LabelFor(m => m.Login, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Login, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Pin, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Pin, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    <br />
+    <hr />
+    <h4>Accounts:</h4>
+    @gridAccounts.GetHtml(columns: new[] {
+    gridAccounts.Column("Number", "Number", style: "column"),
+    gridAccounts.Column("Currency.Name", "Currency", style: "column"),
+    gridAccounts.Column("Amount", "Amount", style: "column")
+    })
+    <br/>
+    @Html.ActionLink("Add account", "AddAccount", "Manage")
+        
+    <hr />
+    <h4>User transactions:</h4>
+    
+    <table class="table">
+        <tr>
+            <th>
+                Account From
+            </th>
+            <th>
+                Account To
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Currency
+            </th>
+            <th>
+               Date
+            </th>
+            <th>
+               Description
+            </th>
+        </tr>
+
+        @foreach (var account in Model.Account)
+        {
+            foreach (var transaction in account.TransactionFrom)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountFrom.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountTo.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountFrom.Currency.Prefix)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Datetime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Description)
+                    </td>
+                </tr>
+            }
+
+            foreach (var transaction in account.TransactionTo)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountFrom.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountTo.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.AccountFrom.Currency.Prefix)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Datetime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => transaction.Description)
+                    </td>
+                </tr>
+            }
+        }
+
+    </table>
+
+    <br />
+    @Html.ActionLink("Transfer money", "AddTransaction", "Manage")  
+</div>
